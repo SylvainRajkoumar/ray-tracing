@@ -48,15 +48,19 @@ void Scene::rayTrace(std::string filename, int width, int heigth) {
 				meshColor = this->meshes[meshIndex]->getColor();
 				meshIntersection = origin + direction * meshDistance;
 				
+				// Calcul du vecteur normal à la surface de la sphère à l'endroit de l'intersection
 				CRTVector normal = (meshIntersection - this->meshes[meshIndex]->getPosition());
 				normal.Normalize();
+				// Calcul du vecteur normalisé de la source lumineuse à l'endroit de l'intersection
 				CRTVector intersectionToLight = this->lights[0]->getPosition() - meshIntersection;
 				intersectionToLight.Normalize();
-				float test = normal.Dot(intersectionToLight);
-				test = test < 0 ? 0.0f : test;
-				meshColor.m_fB *= test;
-				meshColor.m_fG *= test;
-				meshColor.m_fR *= test;
+				// Calcul du produit scalaire permettant de déterminé à quel point le point d'intersection est exposé à la
+				// source lumineuse
+				float dotNormal = normal.Dot(intersectionToLight);
+				dotNormal = dotNormal < 0 ? 0.0f : dotNormal; // Si négatif, la face n'est pas exposée à la source lumineuse
+				meshColor.m_fB *= dotNormal;
+				meshColor.m_fG *= dotNormal;
+				meshColor.m_fR *= dotNormal;
 			}
 
 			buffer[3 * (width * y + x) + BLUE_INDEX] = (unsigned char)(255.0 * meshColor.m_fB);

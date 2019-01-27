@@ -20,9 +20,9 @@ int main() {
 
 	Scene scene;
 	scene.addMesh(new Sphere(CRTVector(100, 100, 200), 50, CRTColor(.0f, .0f, 1.f)));
-	scene.addMesh(new Sphere(CRTVector(100, 100, 300), 50, CRTColor(.0f, 1.f, .0f)));
-	scene.addMesh(new Sphere(CRTVector(100, 100, 400), 50, CRTColor(1.f, 1.f, .0f)));
-	scene.addMesh(new Sphere(CRTVector(100, 100, 500), 50, CRTColor(1.f, .0f, .0f)));
+	scene.addMesh(new Sphere(CRTVector(70, 70, 300), 50, CRTColor(.0f, 1.f, .0f)));
+	scene.addMesh(new Sphere(CRTVector(40, 40, 400), 50, CRTColor(1.f, 1.f, .0f)));
+	scene.addMesh(new Sphere(CRTVector(10, 10, 500), 100, CRTColor(1.f, .0f, .0f)));
 
 	scene.addMesh(new Sphere(CRTVector(-100, -100, 200), 50, CRTColor(.0f, .0f, 1.f)));
 	scene.addMesh(new Sphere(CRTVector(-100, -100, 300), 50, CRTColor(.0f, 1.f, .0f)));
