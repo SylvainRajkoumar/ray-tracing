@@ -7,6 +7,8 @@
 
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
+#include <ctime>
+
 
 int main() {
 	srand(time(NULL));
@@ -30,8 +32,15 @@ int main() {
 	scene.addMesh(new Sphere(CRTVector(-100, -100, 500), 50, CRTColor(1.f, .0f, .0f)));
 
 
-	scene.addLight(new PointLight(CRTVector(100, 200, 100)));
-	scene.rayTrace("result.bmp", 800, 800);
+	scene.addLight(new PointLight(CRTVector(100, 200, 50)));
+
+	clock_t begin = clock();
+
+	scene.rayTrace("result.bmp", 900, 900);
+
+	clock_t end = clock();
+	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+	std::cout << elapsed_secs << std::endl;
 	system("PAUSE");
 	return 0;
 }

@@ -9,6 +9,5 @@ public:
 	~PointLight();
 
 protected:
-	CRTVector position;
 };
 

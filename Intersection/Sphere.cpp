@@ -10,7 +10,6 @@ Sphere::Sphere(CRTVector centerPosition, float radius, CRTColor color) :
 {
 }
 
-
 Sphere::~Sphere()
 {
 }
@@ -19,7 +18,9 @@ float Sphere::getNearestIntersectionDistance(const Ray& ray) {
 	// at² + bt + c = 0
 
 	CRTVector vCO = ray.getOrigin() - this->centerPosition;
-	//float a = ray.getDirection().Dot(ray.getDirection());
+	//CRTVector rayDirection = ray.getDirection();
+	//rayDirection.Normalize();
+    //float a = rayDirection.Dot(rayDirection);
 	float a = 1;
 	float b = 2.0f * vCO.Dot(ray.getDirection());
 	
@@ -38,9 +39,10 @@ float Sphere::getNearestIntersectionDistance(const Ray& ray) {
 	}
 
 	float distance = (-b - sqrt(delta)) / (2.0f * a);
-	//std::cout << "Distance " << distance << std::endl;
+	if (distance < 0) {
+		return INFINITY;
+	}
 	return distance;
-	//return distance < EPSILON ? INFINITE : distance;
 }
 
 CRTVector Sphere::getPosition() const{

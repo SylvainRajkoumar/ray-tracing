@@ -13,6 +13,11 @@ Scene::~Scene()
 {
 }
 
+void Scene::checkForMeshesNearestDistance() {
+
+}
+
+
 void Scene::rayTrace(std::string filename, int width, int heigth) {
 	unsigned char *buffer = new unsigned char[width * heigth * 3];
 
@@ -31,6 +36,7 @@ void Scene::rayTrace(std::string filename, int width, int heigth) {
 			direction = CRTVector(px, py, 1);
 			direction.Normalize();
 			ray.setDirection(direction);
+
 			int meshIndex;
 			float meshDistance = INFINITY;
 
@@ -44,23 +50,38 @@ void Scene::rayTrace(std::string filename, int width, int heigth) {
 			
 			CRTColor meshColor = CRTColor();
 			CRTVector meshIntersection;
+
 			if (meshDistance < INFINITY) {
 				meshColor = this->meshes[meshIndex]->getColor();
-				meshIntersection = origin + direction * meshDistance;
+				meshIntersection = origin + direction * meshDistance; // Coordonnées du point d'intersection
 				
 				// Calcul du vecteur normal à la surface de la sphère à l'endroit de l'intersection
 				CRTVector normal = (meshIntersection - this->meshes[meshIndex]->getPosition());
+
 				normal.Normalize();
-				// Calcul du vecteur normalisé de la source lumineuse à l'endroit de l'intersection
+				// Calcul du vecteur normalisé (source lumineuse -> intersection)
 				CRTVector intersectionToLight = this->lights[0]->getPosition() - meshIntersection;
 				intersectionToLight.Normalize();
 				// Calcul du produit scalaire permettant de déterminé à quel point le point d'intersection est exposé à la
 				// source lumineuse
-				float dotNormal = normal.Dot(intersectionToLight);
+				float dotNormal = normal.Dot(intersectionToLight); // N . L - Lambert
 				dotNormal = dotNormal < 0 ? 0.0f : dotNormal; // Si négatif, la face n'est pas exposée à la source lumineuse
 				meshColor.m_fB *= dotNormal;
 				meshColor.m_fG *= dotNormal;
 				meshColor.m_fR *= dotNormal;
+
+				if (dotNormal > 0.0f) {
+					for (int i = 0; i < this->meshes.size(); i++) {
+						float distance = this->meshes[i]->getNearestIntersectionDistance(Ray(intersectionToLight, meshIntersection + (intersectionToLight * 1.0f)));		
+						if (distance != INFINITY) {
+							//std::cout << distance << std::endl;
+							meshColor.m_fB *= 0.5f;
+							meshColor.m_fG *= 0.5f;
+							meshColor.m_fR *= 0.5f;
+							break;
+						}
+					}
+				}
 			}
 
 			buffer[3 * (width * y + x) + BLUE_INDEX] = (unsigned char)(255.0 * meshColor.m_fB);
@@ -69,6 +90,7 @@ void Scene::rayTrace(std::string filename, int width, int heigth) {
 		}
 	}
 	BMPFile::SaveBmp(filename, buffer, width, heigth);
+	delete buffer;
 }
 
 void Scene::addLight(Light* light) {
