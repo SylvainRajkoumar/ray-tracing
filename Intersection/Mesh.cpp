@@ -12,6 +12,7 @@ Mesh::~Mesh()
 {
 }
 
-CRTColor Mesh::getColor() const {
+CRTColor Mesh::getColor() const 
+{
 	return this->color;
 }

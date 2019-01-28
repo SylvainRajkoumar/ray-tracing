@@ -14,7 +14,8 @@ Sphere::~Sphere()
 {
 }
 
-float Sphere::getNearestIntersectionDistance(const Ray& ray) {
+float Sphere::getNearestIntersectionDistance(const Ray& ray) 
+{
 
 	CRTVector vCO = ray.getOrigin() - this->centerPosition;
 
@@ -23,22 +24,26 @@ float Sphere::getNearestIntersectionDistance(const Ray& ray) {
 	float c = vCO.Dot(vCO) - this->radius * this->radius;
 	float delta = b * b - (4.0f * a * c);
 
-	if (delta < 0) {
+	if (delta < 0) 
+	{
 		return INFINITY;
 	}
 
 	float distance = (-b - sqrt(delta)) / (2.0f * a);
-	if (distance < 0) {
+	if (distance < 0) 
+	{
 		return INFINITY;
 	}
 	return distance;
 }
 
-CRTVector Sphere::getPosition() const{
+CRTVector Sphere::getPosition() const
+{
 	return this->centerPosition;
 }
 
-CRTVector Sphere::getNormal(CRTVector meshIntersection) const {
+CRTVector Sphere::getNormal(CRTVector meshIntersection) const 
+{
 	CRTVector normal = meshIntersection - this->centerPosition;
 	normal.Normalize();
 	return normal;

@@ -11,14 +11,17 @@ Ray::~Ray()
 }
 
 
-CRTVector Ray::getDirection() const {
+CRTVector Ray::getDirection() const 
+{
 	return this->direction;
 }
 
-CRTVector Ray::getOrigin() const {
+CRTVector Ray::getOrigin() const 
+{
 	return this->origin;
 }
 
-void Ray::setDirection(CRTVector newDirection) {
+void Ray::setDirection(CRTVector newDirection) 
+{
 	this->direction = newDirection;
 }

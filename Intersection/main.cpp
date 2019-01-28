@@ -10,7 +10,8 @@
 #include <ctime>
 
 
-int main() {
+int main() 
+{
 	srand(time(NULL));
 	// at² + bt + c = 0 
 	// Delta = b² - 4ac
@@ -21,13 +22,14 @@ int main() {
 	// y = t*dirx + xo
 
 	Scene scene;
-	scene.addMesh(new Sphere(CRTVector(175, 0, 300), 150, CRTColor(.0f, .0f, 1.f)));
-	scene.addMesh(new Sphere(CRTVector(0, 175, 400), 150, CRTColor(.0f, 1.f, .0f)));
-	scene.addMesh(new Sphere(CRTVector(0, 0, 500), 150, CRTColor(1.f, 1.f, .0f)));
-	scene.addMesh(new Sphere(CRTVector(-175, -175, 600), 150, CRTColor(1.f, .0f, .0f)));
+	scene.addMesh(new Sphere(CRTVector(0, 0, 300), 50, CRTColor(.0f, .0f, 1.f)));
+	scene.addMesh(new Sphere(CRTVector(40, 40, 250), 10, CRTColor(0.5f, 0.5f, 0.5f)));
+	scene.addMesh(new Sphere(CRTVector(-50, 20, 250), 10, CRTColor(0.5f, 0.5f, 0.5f)));
+	//scene.addMesh(new Sphere(CRTVector(0, 0, 500), 100, CRTColor(1.f, 1.f, .0f)));
+	//scene.addMesh(new Sphere(CRTVector(-175, -175, 600), 100, CRTColor(1.f, .0f, .0f)));
 
-	scene.addLight(new PointLight(CRTVector(300, 300, 0)));
-	scene.addLight(new PointLight(CRTVector(-300, -300, 0)));
+	scene.addLight(new PointLight(CRTVector(100, 150, 200)));
+	scene.addLight(new PointLight(CRTVector(-100, 150, 200)));
 
 	clock_t begin = clock();
 
