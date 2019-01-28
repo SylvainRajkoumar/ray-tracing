@@ -14,7 +14,7 @@ public:
 	~Sphere();
 	virtual float getNearestIntersectionDistance(const Ray& ray);
 	virtual CRTVector getPosition() const;
-
+	virtual CRTVector getNormal(CRTVector meshIntersection) const;
 protected:
 	CRTVector centerPosition;
 	float radius;

@@ -13,8 +13,14 @@ Scene::~Scene()
 {
 }
 
-void Scene::checkForMeshesNearestDistance() {
-
+void Scene::computeMeshesNearestIntersectionDistance(const Ray& ray, float& meshDistance, int& meshIndex) {
+	for (int i = 0; i < this->meshes.size(); i++) {
+		float distance = this->meshes[i]->getNearestIntersectionDistance(ray);
+		if (distance < meshDistance) {
+			meshDistance = distance;
+			meshIndex = i;
+		}
+	}
 }
 
 
@@ -26,8 +32,8 @@ void Scene::rayTrace(std::string filename, int width, int heigth) {
 	Ray ray(direction, origin);
 
 	float fov = 90;
-	float ratio = width / heigth;
-	float scale = tan(fov / 2 * 3.14 / 180);
+	float ratio = (float)width / (float)heigth;
+	float scale = (float)(fov / 2 * 3.14 / 180);
 
 	for (int x = 0; x < width; x++) {
 		for (int y = 0; y < heigth; y++) {
@@ -39,15 +45,8 @@ void Scene::rayTrace(std::string filename, int width, int heigth) {
 
 			int meshIndex;
 			float meshDistance = INFINITY;
+			this->computeMeshesNearestIntersectionDistance(ray, meshDistance, meshIndex);
 
-			for (int i = 0; i < this->meshes.size(); i++) {
-				float distance = this->meshes[i]->getNearestIntersectionDistance(ray);
-				if (distance < meshDistance) {
-					meshDistance = distance;
-					meshIndex = i;
-				}
-			}
-			
 			CRTColor meshColor = CRTColor();
 			CRTVector meshIntersection;
 
@@ -56,34 +55,31 @@ void Scene::rayTrace(std::string filename, int width, int heigth) {
 				meshIntersection = origin + direction * meshDistance; // Coordonnées du point d'intersection
 				
 				// Calcul du vecteur normal à la surface de la sphère à l'endroit de l'intersection
-				CRTVector normal = (meshIntersection - this->meshes[meshIndex]->getPosition());
+				CRTVector normal = this->meshes[meshIndex]->getNormal(meshIntersection);
+				float dotNormalSum = 0;
+				for (int i = 0; i < this->lights.size(); i++) {
+					CRTVector intersectionToLight = this->lights[i]->getLVector(meshIntersection);
+					// Calcul du produit scalaire permettant de déterminé à quel point le point d'intersection est exposé à la
+					// source lumineuse
+					float dotNormal = normal.Dot(intersectionToLight); // N . L - Lambert
+					dotNormal = dotNormal < 0 ? 0.0f : dotNormal; // Si négatif, la face n'est pas exposée à la source lumineuse
+					dotNormalSum += dotNormal;
 
-				normal.Normalize();
-				// Calcul du vecteur normalisé (source lumineuse -> intersection)
-				CRTVector intersectionToLight = this->lights[0]->getPosition() - meshIntersection;
-				intersectionToLight.Normalize();
-				// Calcul du produit scalaire permettant de déterminé à quel point le point d'intersection est exposé à la
-				// source lumineuse
-				float dotNormal = normal.Dot(intersectionToLight); // N . L - Lambert
-				dotNormal = dotNormal < 0 ? 0.0f : dotNormal; // Si négatif, la face n'est pas exposée à la source lumineuse
-				meshColor.m_fB *= dotNormal;
-				meshColor.m_fG *= dotNormal;
-				meshColor.m_fR *= dotNormal;
-
-				if (dotNormal > 0.0f) {
-					for (int i = 0; i < this->meshes.size(); i++) {
-						float distance = this->meshes[i]->getNearestIntersectionDistance(Ray(intersectionToLight, meshIntersection + (intersectionToLight * 1.0f)));		
-						if (distance != INFINITY) {
-							//std::cout << distance << std::endl;
-							meshColor.m_fB *= 0.5f;
-							meshColor.m_fG *= 0.5f;
-							meshColor.m_fR *= 0.5f;
-							break;
+					if (dotNormal > 0) {
+						int meshIndex;
+						float meshDistance = INFINITY;
+						Ray ray(intersectionToLight, meshIntersection + (intersectionToLight * 0.01f));
+						this->computeMeshesNearestIntersectionDistance(ray, meshDistance, meshIndex);
+						if (meshDistance < INFINITY) {
+							meshColor *= 0.5f;
 						}
 					}
 				}
+				meshColor *= dotNormalSum;
 			}
-
+			if (meshColor.m_fB > 1.0f) meshColor.m_fB = 1.0f;
+			if (meshColor.m_fG > 1.0f) meshColor.m_fG = 1.0f;
+			if (meshColor.m_fR > 1.0f) meshColor.m_fR = 1.0f;
 			buffer[3 * (width * y + x) + BLUE_INDEX] = (unsigned char)(255.0 * meshColor.m_fB);
 			buffer[3 * (width * y + x) + GREEN_INDEX] = (unsigned char)(255.0 * meshColor.m_fG);
 			buffer[3 * (width * y + x) + RED_INDEX] = (unsigned char)(255.0 * meshColor.m_fR);

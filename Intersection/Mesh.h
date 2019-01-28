@@ -11,6 +11,7 @@ public:
 	virtual float getNearestIntersectionDistance(const Ray& ray) = 0;
 	CRTColor getColor() const;
 	virtual CRTVector getPosition() const = 0;
+	virtual CRTVector getNormal(CRTVector meshIntersection) const = 0;
 protected:
 	CRTColor color;
 	//float reflexion;

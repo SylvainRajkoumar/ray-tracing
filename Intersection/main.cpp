@@ -21,18 +21,13 @@ int main() {
 	// y = t*dirx + xo
 
 	Scene scene;
-	scene.addMesh(new Sphere(CRTVector(100, 100, 200), 50, CRTColor(.0f, .0f, 1.f)));
-	scene.addMesh(new Sphere(CRTVector(70, 70, 300), 50, CRTColor(.0f, 1.f, .0f)));
-	scene.addMesh(new Sphere(CRTVector(40, 40, 400), 50, CRTColor(1.f, 1.f, .0f)));
-	scene.addMesh(new Sphere(CRTVector(10, 10, 500), 100, CRTColor(1.f, .0f, .0f)));
+	scene.addMesh(new Sphere(CRTVector(175, 0, 300), 150, CRTColor(.0f, .0f, 1.f)));
+	scene.addMesh(new Sphere(CRTVector(0, 175, 400), 150, CRTColor(.0f, 1.f, .0f)));
+	scene.addMesh(new Sphere(CRTVector(0, 0, 500), 150, CRTColor(1.f, 1.f, .0f)));
+	scene.addMesh(new Sphere(CRTVector(-175, -175, 600), 150, CRTColor(1.f, .0f, .0f)));
 
-	scene.addMesh(new Sphere(CRTVector(-100, -100, 200), 50, CRTColor(.0f, .0f, 1.f)));
-	scene.addMesh(new Sphere(CRTVector(-100, -100, 300), 50, CRTColor(.0f, 1.f, .0f)));
-	scene.addMesh(new Sphere(CRTVector(-100, -100, 400), 50, CRTColor(1.f, 1.f, .0f)));
-	scene.addMesh(new Sphere(CRTVector(-100, -100, 500), 50, CRTColor(1.f, .0f, .0f)));
-
-
-	scene.addLight(new PointLight(CRTVector(100, 200, 50)));
+	scene.addLight(new PointLight(CRTVector(300, 300, 0)));
+	scene.addLight(new PointLight(CRTVector(-300, -300, 0)));
 
 	clock_t begin = clock();
 

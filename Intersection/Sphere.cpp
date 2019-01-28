@@ -15,24 +15,13 @@ Sphere::~Sphere()
 }
 
 float Sphere::getNearestIntersectionDistance(const Ray& ray) {
-	// at² + bt + c = 0
 
 	CRTVector vCO = ray.getOrigin() - this->centerPosition;
-	//CRTVector rayDirection = ray.getDirection();
-	//rayDirection.Normalize();
-    //float a = rayDirection.Dot(rayDirection);
+
 	float a = 1;
 	float b = 2.0f * vCO.Dot(ray.getDirection());
-	
 	float c = vCO.Dot(vCO) - this->radius * this->radius;
 	float delta = b * b - (4.0f * a * c);
-
-	 /*std::cout << "B: " << b << 
-		" C: " << c << 
-		" delta: " << delta << 
-		" ray Direction x " << ray.getDirection().x << " y " << ray.getDirection().y << " z " << ray.getDirection().z <<
-		" vCO x " << vCO.x << " y " << vCO.y << " z " << vCO.z <<
-		std::endl;*/
 
 	if (delta < 0) {
 		return INFINITY;
@@ -47,4 +36,10 @@ float Sphere::getNearestIntersectionDistance(const Ray& ray) {
 
 CRTVector Sphere::getPosition() const{
 	return this->centerPosition;
+}
+
+CRTVector Sphere::getNormal(CRTVector meshIntersection) const {
+	CRTVector normal = meshIntersection - this->centerPosition;
+	normal.Normalize();
+	return normal;
 }

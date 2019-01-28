@@ -14,6 +14,7 @@ class Scene
 public:
 	Scene();
 	~Scene();
+	void computeMeshesNearestIntersectionDistance(const Ray& ray, float& meshDistance, int& meshIndex);
 	void rayTrace(std::string filename, int width, int heigth);
 	void addLight(Light* light);
 	void addMesh(Mesh* mesh);
